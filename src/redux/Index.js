@@ -1,7 +1,3 @@
-export {
+export { setRssData, setActiveArticle } from "./AppActions";
 
-} from "./AppActions";
-
-export { 
-
-} from "./Selectors";
+export { getRssData, getActiveArticle } from "./Selectors";
