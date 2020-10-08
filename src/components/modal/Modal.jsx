@@ -34,7 +34,7 @@ function Modal() {
     </>
   ) : (
     <div className="modal-overlay">
-      <div class="spinner"></div>
+      <div className="spinner"></div>
     </div>
   );
 }

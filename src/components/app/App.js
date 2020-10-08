@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import feedAPI from "../../api/index";
@@ -7,7 +7,8 @@ import {
   getRssData,
   setActiveArticle,
   getActiveArticle,
-  getFeeds
+  getFeeds,
+  pushFeed
 } from "../../redux/Index";
 
 import { Modal } from "../index";
@@ -17,37 +18,56 @@ function App() {
   const dispatch = useDispatch();
   const activeArticle = useSelector(getActiveArticle);
   const feeds = useSelector(getFeeds);
+  const [input, setInput] = useState("");
 
   const rssData = useSelector(getRssData);
+
+  useEffect(()=> {
+    // make sure the datafeed is empty on first load
+    dispatch(setRssData(null))
+  }, [dispatch])
 
   useEffect(() => {
     (async () => {
       // fetch the data
-      const { items } = await feedAPI.getFeed(feeds);
-
-      if (items) dispatch(setRssData(items));
+      if (feeds) {
+        const res = await feedAPI.getFeed(feeds);
+        Promise.allSettled(res).then((x) => {
+          x.forEach((e) => {
+            if (e.status === "fulfilled") {
+              dispatch(setRssData(e.value.items))
+            };
+          });
+        }).catch((err)=>console.error(err))
+      }
     })();
   }, [dispatch, feeds]);
 
-  useEffect(() => {
-    console.log(rssData);
-  }, [rssData]);
+  const renderFeed = () => {
+    if (rssData.length > 0) {
+      return rssData.map(({ categories, creator, title, link, guid }, i) => (
+        <div
+          className="card"
+          key={i}
+          onClick={() => dispatch(setActiveArticle(link))}
+        >
+          <div>{categories?.map((cat) => cat._)}</div>
+          <div>{creator}</div>
+          <div>{title}</div>
+        </div>
+      ));
+    }
+  };
 
-  const renderFeed = () =>
-    rssData.map(({ categories, creator, title, link, guid }) => (
-      <div
-        className="card"
-        key={guid}
-        onClick={() => dispatch(setActiveArticle(link))}
-      >
-        <div>{categories?.map((cat) => cat._)}</div>
-        <div>{creator}</div>
-        <div>{title}</div>
-      </div>
-    ));
+  const addFeed = () => {
+    dispatch(setRssData(null))
+    dispatch(pushFeed(input))
+  }
 
   return rssData ? (
     <div className="App">
+      <input value={input} onChange={(e)=>setInput(e.target.value)} type="text"/>
+      <button onClick={addFeed}>add</button>
       <div className="flex-grid">{renderFeed()}</div>
       {activeArticle && <Modal />}
     </div>
