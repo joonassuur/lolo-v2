@@ -6,6 +6,8 @@ import {
   setRssData,
   getRssData,
   setActiveArticle,
+  getActiveArticle,
+  getFeeds
 } from "../../redux/Index";
 
 import { Modal } from "../index";
@@ -13,38 +15,41 @@ import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
+  const activeArticle = useSelector(getActiveArticle);
+  const feeds = useSelector(getFeeds);
 
   const rssData = useSelector(getRssData);
 
   useEffect(() => {
     (async () => {
       // fetch the data
-      const { items } = await feedAPI.getFeed();
+      const { items } = await feedAPI.getFeed(feeds);
 
       if (items) dispatch(setRssData(items));
     })();
-  }, [dispatch]);
+  }, [dispatch, feeds]);
 
   useEffect(() => {
     console.log(rssData);
   }, [rssData]);
 
-  const renderFeed = () => {
-    return rssData.map(({ categories, creator, title, link, guid }) => {
-      return (
-        <div key={guid} onClick={() => dispatch(setActiveArticle(link))}>
-          <div>{categories?.map((cat) => cat._)}</div>
-          <div>{creator}</div>
-          <div>{title}</div>
-        </div>
-      );
-    });
-  };
+  const renderFeed = () =>
+    rssData.map(({ categories, creator, title, link, guid }) => (
+      <div
+        className="card"
+        key={guid}
+        onClick={() => dispatch(setActiveArticle(link))}
+      >
+        <div>{categories?.map((cat) => cat._)}</div>
+        <div>{creator}</div>
+        <div>{title}</div>
+      </div>
+    ));
 
   return rssData ? (
     <div className="App">
-      {renderFeed()}
-      <Modal />
+      <div className="flex-grid">{renderFeed()}</div>
+      {activeArticle && <Modal />}
     </div>
   ) : null;
 }

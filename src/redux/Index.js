@@ -1,3 +1,3 @@
 export { setRssData, setActiveArticle } from "./AppActions";
 
-export { getRssData, getActiveArticle } from "./Selectors";
+export { getRssData, getActiveArticle, getFeeds } from "./Selectors";
