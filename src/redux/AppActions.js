@@ -10,9 +10,21 @@ export const setActiveArticle = (payload) => {
     payload,
   };
 };
+export const setLoading = (payload) => {
+  return {
+    type: "SET_LOADING",
+    payload,
+  };
+};
 export const pushFeed = (payload) => {
   return {
     type: "PUSH_FEED",
+    payload,
+  };
+};
+export const removeFeed = (payload) => {
+  return {
+    type: "REMOVE_FEED",
     payload,
   };
 };

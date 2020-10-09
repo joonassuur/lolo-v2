@@ -7,7 +7,7 @@ const feedAPI = {
   async getFeed(feeds) {
     return feeds.map(async (feed) => {
       const res = await parser.parseURL(`${cors}${feed}`);
-      return res
+      return res;
     });
   },
 };
