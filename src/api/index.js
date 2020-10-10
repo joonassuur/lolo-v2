@@ -1,7 +1,13 @@
 import Parser from "rss-parser";
 
 const cors = "https://desolate-ocean-10959.herokuapp.com/";
-const parser = new Parser();
+let parser = new Parser({
+  customFields: {
+    item: [
+      ['media:content', 'media', {keepArray: false}],
+    ]
+  }
+})
 
 const feedAPI = {
   async getFeed(feeds) {

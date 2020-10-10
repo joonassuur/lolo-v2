@@ -12,7 +12,10 @@ import {
 
 import { Modal, ActiveFeeds, Card } from "../index";
 
+import "./App.scss";
+
 const colorPool = [
+  "#fff",
   "#f1f1f1",
   "#c2d1f0",
   "#ccffe6",
@@ -67,14 +70,16 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        type="text"
-      />
-      <button onClick={addFeed}>add</button>
-      <ActiveFeeds />
+    <div className="app">
+      <div className="head">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          type="text"
+        />
+        <button onClick={addFeed}>add</button>
+        <ActiveFeeds />
+      </div>
       <Card />
       {activeArticle && <Modal />}
     </div>

@@ -15,20 +15,43 @@ const Card = React.memo(() => {
     return (
       <div className="flex-grid">
         {rssData.map(({ items, color }) => {
-          return items.map(({ categories, creator, title, link, guid }) => {
-            return (
-              <div
-                key={guid}
-                className="card"
-                style={{ background: color }}
-                onClick={() => dispatch(setActiveArticle(link))}
-              >
-                <div>{categories?.map((cat) => cat._)}</div>
-                <div>{creator}</div>
-                <div>{title}</div>
-              </div>
-            );
-          });
+          return items.map(
+            ({
+              categories,
+              media,
+              creator,
+              title,
+              link,
+              guid,
+              contentSnippet,
+              pubDate,
+            }) => {
+              return (
+                <div
+                  key={guid}
+                  className="card"
+                  style={{ background: color }}
+                  onClick={() => dispatch(setActiveArticle(link))}
+                >
+                  {media?.$?.url && (
+                    <img src={media.$.url} style={{ width: "100%" }} alt="" />
+                  )}
+                  <div className="text-content">
+                    <div className="category-container">
+                      {categories?.map((cat, i) => (
+                        <span key={i} className="category">{cat._}</span>
+                      ))}
+                    </div>
+                    <h3>{title}</h3>
+                    <div className="description">{contentSnippet}</div>
+                    <div className="bottom">
+                      <span>{creator}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          );
         })}
       </div>
     );
