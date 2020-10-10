@@ -4,43 +4,51 @@ import { useDispatch, useSelector } from "react-redux";
 import feedAPI from "../../api/index";
 import {
   setRssData,
-  getRssData,
-  setActiveArticle,
   getActiveArticle,
   getFeeds,
   setLoading,
-  getLoading,
   pushFeed,
 } from "../../redux/Index";
 
-import { Modal, ActiveFeeds } from "../index";
-import "./App.scss";
+import { Modal, ActiveFeeds, Card } from "../index";
+
+const colorPool = [
+  "#f1f1f1",
+  "#c2d1f0",
+  "#ccffe6",
+  "#d1e0e0",
+  "#e5e5cc",
+  "#b3b3ff",
+];
 
 function App() {
   const dispatch = useDispatch();
   const activeArticle = useSelector(getActiveArticle);
   const feeds = useSelector(getFeeds);
-  const loading = useSelector(getLoading);
   const [input, setInput] = useState("");
 
-  const rssData = useSelector(getRssData);
-
   useEffect(() => {
-    // make sure the datafeed is empty on first load
+    // reset the datafeed on first load
     dispatch(setRssData(null));
   }, [dispatch]);
 
   useEffect(() => {
     (async () => {
       // fetch the data
-      if (feeds) {
+      if (feeds.length > 0) {
         dispatch(setLoading(true));
         const res = await feedAPI.getFeed(feeds);
         Promise.allSettled(res)
           .then((x) => {
-            x.forEach((e) => {
+            x.forEach((e, i) => {
               if (e.status === "fulfilled") {
-                dispatch(setRssData(e.value.items));
+                dispatch(
+                  setRssData({
+                    items: e.value.items,
+                    feedUrl: e.value.feedUrl,
+                    color: colorPool[i],
+                  })
+                );
                 dispatch(setLoading(false));
               }
             });
@@ -50,28 +58,11 @@ function App() {
     })();
   }, [dispatch, feeds]);
 
-  const renderFeed = () => {
-    if (!loading) {
-      return rssData.map(({ categories, creator, title, link }, iteration) => (
-        <div
-          className="card"
-          key={iteration}
-          onClick={() => dispatch(setActiveArticle(link))}
-        >
-          <div>{categories?.map((cat) => cat._)}</div>
-          <div>{creator}</div>
-          <div>{title}</div>
-        </div>
-      ));
-    }
-    return <div>spinner</div>;
-  };
-
   const addFeed = () => {
     if (!feeds.includes(input)) {
       dispatch(setRssData(null));
       dispatch(pushFeed(input));
-      setInput("")
+      setInput("");
     }
   };
 
@@ -83,9 +74,8 @@ function App() {
         type="text"
       />
       <button onClick={addFeed}>add</button>
-
       <ActiveFeeds />
-      <div className="flex-grid">{renderFeed()}</div>
+      <Card />
       {activeArticle && <Modal />}
     </div>
   );
