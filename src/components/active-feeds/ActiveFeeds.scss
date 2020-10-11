@@ -1,0 +1,14 @@
+.feed {
+  display: flex;
+  .feed-text {
+    word-break: break-all;
+    strong {
+      margin-right: 5px;
+    }
+    display: flex;
+  }
+  @media screen and (max-width: 550px) {
+    flex-direction: column;
+    margin-bottom: 0.5em;
+  }
+}

@@ -2,26 +2,30 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFeeds, removeFeed, setRssData } from "../../redux/Index";
 
+import "./ActiveFeeds.scss";
+
 function ActiveFeeds() {
   const dispatch = useDispatch();
   const feeds = useSelector(getFeeds);
 
   const handleRemoveFeed = (i) => {
     dispatch(setRssData(null));
-    dispatch(removeFeed(i))
-  }
+    dispatch(removeFeed(i));
+  };
 
   return (
-    <div>
+    <>
       <p>Active feeds:</p>
       {feeds.map((feed, i) => (
-        <div key={i}>
-          <strong>{i + 1}: </strong>
-          <span>{feed}</span>
-          <button onClick={()=>handleRemoveFeed(i)}>Remove</button>
+        <div className="feed" key={i}>
+          <div className="feed-text">
+            <strong>{i + 1}:</strong>
+            <span>{feed}</span>
+          </div>
+          <button onClick={() => handleRemoveFeed(i)}>Remove</button>
         </div>
       ))}
-    </div>
+    </>
   );
 }
 

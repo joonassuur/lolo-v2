@@ -51,7 +51,11 @@ function App() {
             x.forEach((e, i) => {
               if (e.status === "fulfilled") {
                 dispatch(
-                  setRssData({items: e.value.items, source: e.value.feedUrl, color: colorPool[i] })
+                  setRssData({
+                    items: e.value.items,
+                    source: e.value.feedUrl,
+                    color: colorPool[i],
+                  })
                 );
                 dispatch(setLoading(false));
               }
@@ -74,13 +78,15 @@ function App() {
     <div className="app">
       <div className="head">
         <p>Add feed</p>
-        <input
-          value={input}
-          className="feed-input"
-          onChange={(e) => setInput(e.target.value)}
-          type="text"
-        />
-        <button onClick={addFeed}>Add</button>
+        <div className="input-btn">
+          <input
+            value={input}
+            className="feed-input"
+            onChange={(e) => setInput(e.target.value)}
+            type="text"
+          />
+          <button onClick={addFeed}>Add</button>
+        </div>
         <ActiveFeeds />
       </div>
       <Card />
