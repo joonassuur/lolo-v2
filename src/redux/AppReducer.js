@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const INITIAL_STATE = {
   rssData: [],
   activeArticle: undefined,
@@ -14,9 +16,16 @@ function AppReducer(state = INITIAL_STATE, { payload, type }) {
           rssData: [],
         };
       }
+      // assign a color to every card from a different source
+      payload.items.forEach((e) => (e.color = payload.color));
+      // take the existing rssData from the state and concat the incoming items to it
+      const clonedData = _.cloneDeep(state.rssData).concat(payload.items);
+      // sort the articles by date
+      clonedData.sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
       return {
         ...state,
-        rssData: state.rssData.concat(payload),
+        rssData: clonedData,
       };
     case "SET_ACTIVE_ARTICLE":
       return {

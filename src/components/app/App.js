@@ -14,6 +14,7 @@ import { Modal, ActiveFeeds, Card } from "../index";
 
 import "./App.scss";
 
+// color pool for cards from different feeds
 const colorPool = [
   "#fff",
   "#f1f1f1",
@@ -22,6 +23,10 @@ const colorPool = [
   "#d1e0e0",
   "#e5e5cc",
   "#b3b3ff",
+  "#ffb3b3",
+  "#f2ffcc",
+  "#d9f2e6",
+  "#ccffff",
 ];
 
 function App() {
@@ -46,11 +51,7 @@ function App() {
             x.forEach((e, i) => {
               if (e.status === "fulfilled") {
                 dispatch(
-                  setRssData({
-                    items: e.value.items,
-                    feedUrl: e.value.feedUrl,
-                    color: colorPool[i],
-                  })
+                  setRssData({items: e.value.items, source: e.value.feedUrl, color: colorPool[i] })
                 );
                 dispatch(setLoading(false));
               }
@@ -72,12 +73,14 @@ function App() {
   return (
     <div className="app">
       <div className="head">
+        <p>Add feed</p>
         <input
           value={input}
+          className="feed-input"
           onChange={(e) => setInput(e.target.value)}
           type="text"
         />
-        <button onClick={addFeed}>add</button>
+        <button onClick={addFeed}>Add</button>
         <ActiveFeeds />
       </div>
       <Card />

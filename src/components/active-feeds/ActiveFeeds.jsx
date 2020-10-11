@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFeeds, removeFeed, setRssData } from "../../redux/Index";
 
@@ -18,7 +18,7 @@ function ActiveFeeds() {
         <div key={i}>
           <strong>{i + 1}: </strong>
           <span>{feed}</span>
-          <button onClick={()=>handleRemoveFeed(i)}>remove</button>
+          <button onClick={()=>handleRemoveFeed(i)}>Remove</button>
         </div>
       ))}
     </div>
